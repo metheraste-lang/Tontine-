@@ -8,52 +8,38 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('tontines', function (Blueprint $table) {
+        Schema::create('users', function (Blueprint $table) {
 
             $table->id();
 
-            $table->foreignId('creator_id')
-                ->constrained('users')
-                ->cascadeOnDelete();
+            $table->foreignId('role_id')
+                ->constrained('roles');
 
-            $table->string('title');
+            $table->string('first_name');
 
-            $table->text('description')->nullable();
+            $table->string('last_name');
 
-            $table->enum('type', [
-                'collective',
-                'individuelle'
-            ]);
+            $table->string('phone')->unique();
 
-            $table->enum('frequency', [
-                'journaliere',
-                'hebdomadaire',
-                'mensuelle'
-            ]);
+            $table->string('email')->nullable()->unique();
 
-            $table->decimal('amount',15,2);
+            $table->string('password');
 
-            $table->integer('max_members')->default(1);
+            $table->string('photo')->nullable();
 
-            $table->date('start_date')->nullable();
+            $table->boolean('phone_verified')->default(false);
 
-            $table->date('end_date')->nullable();
+            $table->boolean('is_active')->default(true);
 
-            $table->enum('status',[
-                'ouverte',
-                'en_cours',
-                'terminee',
-                'suspendue'
-            ])->default('ouverte');
-
-            $table->string('invite_code')->unique();
+            $table->rememberToken();
 
             $table->timestamps();
+
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('tontines');
+        Schema::dropIfExists('users');
     }
 };
